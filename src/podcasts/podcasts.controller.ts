@@ -10,6 +10,7 @@ import {
 import { PodcastsService } from './podcasts.service';
 import { CreatePodcastDto } from './dto/create-podcast.dto';
 import { UpdatePodcastDto } from './dto/update-podcast.dto';
+import { CreateEpisodeDto } from './dto/create-episode.dto';
 
 @Controller('podcasts')
 export class PodcastsController {
@@ -45,8 +46,11 @@ export class PodcastsController {
     return this.podcastsService.findEpisodes(+podcastId);
   }
   @Post(':id/episodes')
-  createEpisode(@Param('id') podcastId: number, @Body() body) {
-    return this.podcastsService.createEpisode(+podcastId, body);
+  createEpisode(
+    @Param('id') podcastId: number,
+    createEpisodeDto: CreateEpisodeDto,
+  ) {
+    return this.podcastsService.createEpisode(+podcastId, createEpisodeDto);
   }
   @Patch(':id/episodes/:episodeId')
   updateEpisode(
