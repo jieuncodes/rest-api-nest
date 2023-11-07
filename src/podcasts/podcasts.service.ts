@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Body, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePodcastDto } from './dto/create-podcast.dto';
 import { UpdatePodcastDto } from './dto/update-podcast.dto';
 import { Podcast } from './entities/podcast.entity';
@@ -9,7 +9,12 @@ export class PodcastsService {
   private podcasts: Podcast[] = [];
 
   create(createPodcastDto: CreatePodcastDto) {
-    return 'This action adds a new podcast';
+    console.log('createPodcastDto', createPodcastDto);
+    return this.podcasts.push({
+      id: this.podcasts.length + 1,
+      ...createPodcastDto,
+      episodes: [],
+    });
   }
 
   findAll() {
