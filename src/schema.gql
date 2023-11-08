@@ -1,0 +1,26 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Episode {
+  category: String
+  id: Float!
+  rating: Float
+  title: String!
+}
+
+type Mutation {
+  createPodcast(category: String!, title: String!): Boolean!
+}
+
+type Podcast {
+  category: String!
+  episodes: [Episode!]!
+  id: Float!
+  rating: Float!
+  title: String!
+}
+
+type Query {
+  Podcasts: [Podcast!]!
+}
