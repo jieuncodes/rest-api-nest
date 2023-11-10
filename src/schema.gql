@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreatePodcastDto {
+  category: String!
+  title: String!
+}
+
 type Episode {
   category: String
   id: Float!
@@ -9,8 +14,20 @@ type Episode {
   title: String!
 }
 
+input EpisodeInput {
+  category: String
+  id: Float
+  rating: Float
+  title: String
+}
+
 type Mutation {
-  createPodcast(category: String!, title: String!): Boolean!
+  createEpisode(category: String, podcastId: Float!, title: String!): Episode!
+  createPodcast(createPodcastInput: CreatePodcastDto!): Podcast!
+  deleteEpisode(episodeId: Float!, podcastId: Float!): Boolean!
+  deletePodcast(id: Float!): Boolean!
+  updateEpisode(category: String, episodeId: Int!, podcastId: Int!, rating: Int, title: String): Boolean!
+  updatePodcast(category: String, episodes: [EpisodeInput!], id: Float!, rating: Float, title: String): Podcast!
 }
 
 type Podcast {
@@ -22,5 +39,8 @@ type Podcast {
 }
 
 type Query {
-  Podcasts: [Podcast!]!
+  getAllPodcasts: [Podcast!]!
+  getEpisode(episodeId: Float!, podcastId: Float!): Episode!
+  getEpisodes(id: Float!): [Episode!]!
+  getPodcast(id: Float!): Podcast
 }

@@ -1,8 +1,9 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { ArgsType, Field } from '@nestjs/graphql';
 import { Episode } from '../entities/episode.entity';
 import { IsInt, IsString } from 'class-validator';
+import { EpisodeInput } from './episode-input.dto';
 
-@InputType()
+@ArgsType()
 export class UpdatePodcastDto {
   @Field((type) => String, { nullable: true })
   @IsString()
@@ -16,7 +17,7 @@ export class UpdatePodcastDto {
   @IsInt()
   rating?: number;
 
-  @Field((type) => [Episode], { nullable: true })
+  @Field((type) => [EpisodeInput], { nullable: true })
   @IsString({ each: true })
-  episodes?: Episode[];
+  episodes?: EpisodeInput[];
 }

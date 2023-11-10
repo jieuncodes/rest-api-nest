@@ -23,7 +23,7 @@ export class PodcastsService {
     return { id, err: null };
   }
 
-  getPodcast(id: string): { podcast: Podcast | null; err: string | null } {
+  getPodcast(id: Number): { podcast: Podcast | null; err: string | null } {
     const foundPodcasts = this.podcasts.filter((podcast) => podcast.id === +id);
     if (foundPodcasts.length === 0) {
       return { podcast: null, err: 'Podcast not found.' };
@@ -36,28 +36,39 @@ export class PodcastsService {
     }
   }
 
-  deletePodcast(id: string): { err: string | null } {
+  deletePodcast(id: number): { err: string | null } {
     this.podcasts = this.podcasts.filter((p) => p.id !== +id);
     return { err: null };
   }
 
   updatePodcast(
-    id: string,
+    id: number,
     updatePodcastDto: UpdatePodcastDto,
   ): { err: string | null } {
     const { podcast, err: findErr } = this.getPodcast(id);
     if (findErr) {
       return { err: findErr };
     }
+    const updatedEpisodes = podcast.episodes.map((episode) => {
+      const update = updatePodcastDto.episodes?.find(
+        (e) => e.id === episode.id,
+      );
+      return update ? { ...episode, ...update } : episode;
+    });
+
     const { err: deleteErr } = this.deletePodcast(id);
     if (deleteErr) {
       return { err: deleteErr };
     }
-    this.podcasts.push({ ...podcast, ...updatePodcastDto });
+    this.podcasts.push({
+      ...podcast,
+      ...updatePodcastDto,
+      episodes: updatedEpisodes,
+    });
     return { err: null };
   }
 
-  getEpisodes(podcastId: string): {
+  getEpisodes(podcastId: number): {
     episodes: Episode[] | null;
     err: string | null;
   } {
@@ -68,10 +79,10 @@ export class PodcastsService {
     return { episodes: podcast.episodes, err: null };
   }
 
-  createEpisode(
-    podcastId: string,
-    { title, category }: CreateEpisodeDto,
-  ): { episodeId: number | null; err: string | null } {
+  createEpisode({ podcastId, title, category }: CreateEpisodeDto): {
+    episodeId: number | null;
+    err: string | null;
+  } {
     const { podcast, err: findErr } = this.getPodcast(podcastId);
     if (findErr) {
       return { episodeId: null, err: findErr };
@@ -88,7 +99,7 @@ export class PodcastsService {
     return { episodeId, err: null };
   }
 
-  deleteEpisode(podcastId: string, episodeId: string): { err: string | null } {
+  deleteEpisode(podcastId: number, episodeId: number): { err: string | null } {
     const { podcast, err: findErr } = this.getPodcast(podcastId);
     if (findErr) {
       return { err: findErr };
@@ -103,8 +114,8 @@ export class PodcastsService {
   }
 
   findEpisode(
-    podcastId: string,
-    episodeId: string,
+    podcastId: number,
+    episodeId: number,
   ): { episode: Episode | null; err: string | null } {
     const { episodes, err: findErr } = this.getEpisodes(podcastId);
     if (findErr) {
@@ -118,8 +129,8 @@ export class PodcastsService {
   }
 
   updateEpisode(
-    podcastId: string,
-    episodeId: string,
+    podcastId: number,
+    episodeId: number,
     updateEpisodeDto: UpdateEpisodeDto,
   ): { err: string | null } {
     const { episode, err: findEpisodeErr } = this.findEpisode(

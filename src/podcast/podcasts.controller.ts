@@ -28,20 +28,20 @@ export class PodcastsController {
   }
 
   @Get('/:id')
-  getPodcast(@Param('id') id: string) {
+  getPodcast(@Param('id') id: number) {
     return this.podcastsService.getPodcast(id);
   }
 
   @Patch('/:id')
   updatePodcast(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updatePodcastDto: UpdatePodcastDto,
   ) {
     return this.podcastsService.updatePodcast(id, updatePodcastDto);
   }
 
   @Delete('/:id')
-  deletePodcast(@Param('id') id: string) {
+  deletePodcast(@Param('id') id: number) {
     return this.podcastsService.deletePodcast(id);
   }
 }
@@ -50,22 +50,22 @@ export class PodcastsController {
 export class EpisodeController {
   constructor(private readonly podcastService: PodcastsService) {}
   @Get('/episodes')
-  getEpisodes(@Param('id') podcastId: string) {
+  getEpisodes(@Param('id') podcastId: number) {
     return this.podcastService.getEpisodes(podcastId);
   }
 
   @Post('/episodes')
   createEpisode(
-    @Param('id') podcastId: string,
+    @Param('id') podcastId: number,
     @Body() createEpisodeDto: CreateEpisodeDto,
   ) {
-    return this.podcastService.createEpisode(podcastId, createEpisodeDto);
+    return this.podcastService.createEpisode(createEpisodeDto);
   }
 
   @Patch('/episodes/:episodeId')
   updateEpisode(
-    @Param('id') podcastId: string,
-    @Param('episodeId') episodeId: string,
+    @Param('id') podcastId: number,
+    @Param('episodeId') episodeId: number,
     @Body() updateEpisodeDto: UpdateEpisodeDto,
   ) {
     return this.podcastService.updateEpisode(
@@ -77,8 +77,8 @@ export class EpisodeController {
 
   @Delete('/episodes/:episodeId')
   deleteEpisode(
-    @Param('id') podcastId: string,
-    @Param('episodeId') episodeId: string,
+    @Param('id') podcastId: number,
+    @Param('episodeId') episodeId: number,
   ) {
     return this.podcastService.deleteEpisode(podcastId, episodeId);
   }

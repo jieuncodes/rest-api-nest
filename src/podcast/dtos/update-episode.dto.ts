@@ -1,17 +1,30 @@
-import { ArgsType, Field } from '@nestjs/graphql';
-import { IsInt, IsString } from 'class-validator';
+import { InputType, Field, Int, ArgsType } from '@nestjs/graphql';
+import { IsOptional, IsString, IsInt, Min } from 'class-validator';
 
 @ArgsType()
 export class UpdateEpisodeDto {
-  @Field((type) => String)
+  @Field(() => Int)
+  @IsInt()
+  @Min(1)
+  podcastId: number;
+
+  @Field(() => Int)
+  @IsInt()
+  @Min(1)
+  episodeId: number;
+
+  @Field(() => String, { nullable: true })
   @IsString()
+  @IsOptional()
   title?: string;
 
-  @Field((type) => String)
+  @Field(() => String, { nullable: true })
   @IsString()
-  category: string;
+  @IsOptional()
+  category?: string;
 
-  @Field((type) => Number)
+  @Field(() => Int, { nullable: true })
   @IsInt()
-  rating: number;
+  @IsOptional()
+  rating?: number;
 }
