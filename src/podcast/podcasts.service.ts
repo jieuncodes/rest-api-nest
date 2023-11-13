@@ -31,16 +31,18 @@ export class PodcastsService {
     return { ok: true, error: null };
   }
 
-  getPodcast(id: number): PodcastSearchOutput {
+  async getPodcast(id: number): Promise<PodcastSearchOutput> {
     const foundPodcasts = this.podcasts.filter((podcast) => podcast.id === id);
+
     if (!foundPodcasts) {
       return { ok: false, error: `Podcast with id ${id} not found` };
     }
     return { ok: true, podcast: foundPodcasts[0] };
   }
 
-  deletePodcast(id: number): CoreOutput {
-    const { ok, error } = this.getPodcast(id);
+  async deletePodcast(id: number): Promise<CoreOutput> {
+    const { ok, error } = await this.getPodcast(id);
+
     if (!ok) {
       return { ok, error };
     }
@@ -48,8 +50,11 @@ export class PodcastsService {
     return { ok };
   }
 
-  updatePodcast(id: number, updatePodcastDto: UpdatePodcastDto): CoreOutput {
-    const { ok, error, podcast } = this.getPodcast(id);
+  async updatePodcast(
+    id: number,
+    updatePodcastDto: UpdatePodcastDto,
+  ): Promise<CoreOutput> {
+    const { ok, error, podcast } = await this.getPodcast(id);
     if (!ok) {
       return { ok, error };
     }
@@ -58,20 +63,20 @@ export class PodcastsService {
     return { ok };
   }
 
-  getEpisodes(podcastId: number): EpisodeSearchOutput {
-    const { ok, podcast, error } = this.getPodcast(podcastId);
+  async getEpisodes(podcastId: number): Promise<EpisodeSearchOutput> {
+    const { ok, podcast, error } = await this.getPodcast(podcastId);
     if (!ok) {
       return { ok, error };
     }
     return { ok: true, episodes: podcast.episodes, error: null };
   }
 
-  createEpisode({
+  async createEpisode({
     id: podcastId,
     title,
     category,
-  }: CreateEpisodeDto): EpisodeSearchOutput {
-    const { ok, podcast, error } = this.getPodcast(podcastId);
+  }: CreateEpisodeDto): Promise<EpisodeSearchOutput> {
+    const { ok, podcast, error } = await this.getPodcast(podcastId);
 
     if (!ok) {
       return { ok, error };
@@ -92,8 +97,11 @@ export class PodcastsService {
     return { ok: true };
   }
 
-  deleteEpisode({ podcastId, episodeId }: EpisodesSearchInput): CoreOutput {
-    const { podcast, error, ok } = this.getPodcast(podcastId);
+  async deleteEpisode({
+    podcastId,
+    episodeId,
+  }: EpisodesSearchInput): Promise<CoreOutput> {
+    const { podcast, error, ok } = await this.getPodcast(podcastId);
     if (!ok) {
       return { ok, error };
     }
@@ -104,12 +112,12 @@ export class PodcastsService {
     return { ok: true };
   }
 
-  updateEpisode({
+  async updateEpisode({
     podcastId,
     episodeId,
     ...rest
-  }: UpdateEpisodeDto): CoreOutput {
-    const { podcast, error, ok } = this.getPodcast(podcastId);
+  }: UpdateEpisodeDto): Promise<CoreOutput> {
+    const { podcast, error, ok } = await this.getPodcast(podcastId);
 
     if (!ok) {
       return { ok, error };

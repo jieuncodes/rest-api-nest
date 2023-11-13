@@ -6,39 +6,34 @@ import { PodcastsService } from './podcasts.service';
 import { UpdatePodcastDto } from './dtos/update-podcast.dto';
 import { CreateEpisodeDto } from './dtos/create-episode.dto';
 import { UpdateEpisodeDto } from './dtos/update-episode.dto';
+import { CoreOutput } from './dtos/output.dto';
 
-@Resolver((of) => Podcast)
+@Resolver(() => Podcast)
 export class PodcastsResolver {
   constructor(private readonly podcastsService: PodcastsService) {}
 
   @Query((returns) => [Podcast])
-  async getAllPodcasts() {
-    const { podcasts } = this.podcastsService.getAllPodcasts();
-    return podcasts;
+  getAllPodcasts() {
+    return this.podcastsService.getAllPodcasts();
   }
 
-  @Mutation((returns) => Podcast)
-  async createPodcast(
+  @Mutation((returns) => CoreOutput)
+  createPodcast(
     @Args('createPodcastInput') createPodcastDto: CreatePodcastDto,
-  ): Promise<Podcast> {
-    const { id, err } =
-      await this.podcastsService.createPodcast(createPodcastDto);
-    if (err) {
-      throw new Error('Error creating Podcast: ' + err);
+  ): CoreOutput {
+    const { ok, error } = this.podcastsService.createPodcast(createPodcastDto);
+
+    if (!ok) {
+      return { ok, error };
     }
-    if (!id) {
-      throw new Error('Failed to create a podcast for unknown reasons.');
-    }
-    return this.getPodcast(id);
+
+    return { ok: true };
   }
 
   @Query((returns) => Podcast, { nullable: true })
   async getPodcast(@Args('id') id: number): Promise<Podcast> {
-    const { podcast, err } = await this.podcastsService.getPodcast(id);
-    if (err) {
-      throw new Error(err);
-    }
-    return podcast;
+    const { ok, podcast, error } = await this.podcastsService.getPodcast(id);
+    return { ok, podcast, error };
   }
 
   @Mutation((returns) => Podcast)
@@ -58,9 +53,9 @@ export class PodcastsResolver {
 
   @Query((returns) => [Episode])
   async getEpisodes(@Args('id') id: number): Promise<Episode[]> {
-    const { episodes, err } = await this.podcastsService.getEpisodes(id);
-    if (err) {
-      throw new Error(err);
+    const { episodes, error } = await this.podcastsService.getEpisodes(id);
+    if (error) {
+      throw new Error(error);
     }
     return episodes;
   }
@@ -71,8 +66,8 @@ export class PodcastsResolver {
   ): Promise<Episode> {
     const createdResult = this.podcastsService.createEpisode(createEpisodeDto);
 
-    if (createdResult.err) {
-      throw new Error(createdResult.err);
+    if (createdResult.error) {
+      throw new Error(createdResult.error);
     }
 
     if (!createdResult.episodeId) {
@@ -83,7 +78,7 @@ export class PodcastsResolver {
       createdResult.episodeId,
     );
 
-    if (findEpisodeResult.err) {
+    if (findEpisodeResult.error) {
       throw new Error('Failed to retrieve the created episode.');
     }
 
@@ -96,7 +91,7 @@ export class PodcastsResolver {
   ): Promise<boolean> {
     const { podcastId, episodeId } = updateEpisodeDto;
 
-    const { episode, err: episodeFindErr } = this.podcastsService.findEpisode(
+    const { episode, error: episodeFindErr } = this.podcastsService.findEpisode(
       podcastId,
       episodeId,
     );
@@ -108,8 +103,8 @@ export class PodcastsResolver {
       episodeId,
       updateEpisodeDto,
     );
-    if (updateResult.err) {
-      throw new Error(updateResult.err);
+    if (updateResult.error) {
+      throw new Error(updateResult.error);
     }
 
     return true;
@@ -135,12 +130,12 @@ export class PodcastsResolver {
     @Args('podcastId') podcastId: number,
     @Args('episodeId') episodeId: number,
   ): Promise<boolean> {
-    const { err } = await this.podcastsService.deleteEpisode(
+    const { error } = await this.podcastsService.deleteEpisode(
       podcastId,
       episodeId,
     );
-    if (err) {
-      throw new Error(err);
+    if (error) {
+      throw new Error(error);
     }
     return true;
   }
