@@ -10,7 +10,4 @@ export class Episode {
 
   @Field((type) => String, { nullable: true })
   category?: string;
-
-  @Field((type) => Number, { nullable: true })
-  rating?: number;
 }

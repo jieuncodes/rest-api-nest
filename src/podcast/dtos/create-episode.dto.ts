@@ -1,12 +1,9 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { IsInt, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
+import { PodcastSearchInput } from './podcast.dto';
 
 @ArgsType()
-export class CreateEpisodeDto {
-  @Field((type) => Number)
-  @IsInt()
-  podcastId: number;
-
+export class CreateEpisodeDto extends PodcastSearchInput {
   @Field((type) => String)
   @IsString()
   title: string;
