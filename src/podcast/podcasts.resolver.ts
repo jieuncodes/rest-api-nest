@@ -4,20 +4,16 @@ import { Episode } from './entities/episode.entity';
 import { CreatePodcastDto } from './dtos/create-podcast.dto';
 import { PodcastsService } from './podcasts.service';
 import { UpdatePodcastDto } from './dtos/update-podcast.dto';
-import { create } from 'domain';
 import { CreateEpisodeDto } from './dtos/create-episode.dto';
 import { UpdateEpisodeDto } from './dtos/update-episode.dto';
 
 @Resolver((of) => Podcast)
 export class PodcastsResolver {
-  constructor(private podcastsService: PodcastsService) {}
+  constructor(private readonly podcastsService: PodcastsService) {}
 
   @Query((returns) => [Podcast])
-  async getAllPodcasts(): Promise<Podcast[]> {
-    const { podcasts, err } = await this.podcastsService.getAllPodcasts();
-    if (err) {
-      throw new Error(err);
-    }
+  async getAllPodcasts() {
+    const { podcasts } = this.podcastsService.getAllPodcasts();
     return podcasts;
   }
 
