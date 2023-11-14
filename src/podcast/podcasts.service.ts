@@ -82,7 +82,6 @@ export class PodcastsService {
       return { ok, error };
     }
 
-    const episodeId = Date.now();
     const newEpisode: Episode = {
       id: podcast.episodes.length + 1,
       title,
