@@ -1,6 +1,7 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
+@InputType('EpisodeInput', { isAbstract: true })
 export class Episode {
   @Field((type) => Number)
   id: number;
