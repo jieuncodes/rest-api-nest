@@ -1,9 +1,11 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { IsInt } from 'class-validator';
 
 @ObjectType()
 @InputType('EpisodeInput', { isAbstract: true })
 export class Episode {
-  @Field((type) => Number)
+  @Field((type) => Int)
+  @IsInt()
   id: number;
 
   @Field((type) => String)
