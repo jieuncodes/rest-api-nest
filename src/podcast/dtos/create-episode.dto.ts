@@ -8,7 +8,7 @@ export class CreateEpisodeDto extends PickType(
   ['title', 'category'],
   InputType,
 ) {
-  @Field((type) => Int)
+  @Field(() => Int)
   @IsInt()
   podcastId: number;
 }

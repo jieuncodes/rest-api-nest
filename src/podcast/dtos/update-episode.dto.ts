@@ -1,5 +1,5 @@
-import { Field, Int, ArgsType } from '@nestjs/graphql';
-import { IsOptional, IsString, isNumber, Min } from 'class-validator';
+import { Field, ArgsType } from '@nestjs/graphql';
+import { IsOptional, IsString } from 'class-validator';
 import { EpisodesSearchInput } from './podcast.dto';
 
 @ArgsType()
@@ -8,9 +8,11 @@ export class UpdateEpisodeDto extends EpisodesSearchInput {
   @IsString()
   @IsOptional()
   title?: string;
+  //readonly?
 
   @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()
   category?: string;
+  //readonly?
 }

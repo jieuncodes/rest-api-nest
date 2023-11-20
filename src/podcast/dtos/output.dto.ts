@@ -3,11 +3,11 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 @ObjectType()
 export class CoreOutput {
-  @Field((type) => Boolean)
+  @Field(() => Boolean)
   @IsBoolean()
   ok?: boolean;
 
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()
   error?: string;

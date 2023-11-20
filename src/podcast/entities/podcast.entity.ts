@@ -1,25 +1,29 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, Max, Min } from 'class-validator';
 import { Episode } from './episode.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { CoreEntity } from './core.entity';
+import { Column, OneToMany } from 'typeorm';
 
 @ObjectType()
-export class Podcast {
-  @Field((type) => Number)
-  @IsNumber()
-  id: number;
-
-  @Field((type) => String)
+export class Podcast extends CoreEntity {
+  @Column()
+  @Field(() => String)
   @IsString()
   title: string;
 
-  @Field((type) => String)
+  @Column()
+  @Field(() => String)
   @IsString()
   category: string;
 
-  @Field((type) => Number)
+  @Column()
+  @Field(() => Number)
   @IsNumber()
+  @Min(0)
+  @Max(5)
   rating: number;
 
-  @Field((type) => [Episode])
+  @OneToMany(() => Episode, (episode) => episode.podcast)
+  @Field(() => [Episode])
   episodes: Episode[];
 }
